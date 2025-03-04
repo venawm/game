@@ -10,7 +10,13 @@ export class Animations {
     return this.patterns[this.activeKey].frame;
   }
 
-  play(key, startAtTime = 0) {}
+  play(key, startAtTime = 0) {
+    if (this.activeKey === key) {
+      return;
+    }
+    this.activeKey = key;
+    this.patterns[this.activeKey].currentTime = startAtTime;
+  }
 
   step(delta) {
     this.patterns[this.activeKey].step(delta);

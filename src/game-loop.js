@@ -2,7 +2,7 @@ export class GameLoop {
   constructor(update, render) {
     this.lastFrameTime = 0;
     this.accumulatedTime = 0;
-    this.timeStep = 1000 / 144; // Fixed typo
+    this.timeStep = 1000 / 60; // Fixed typo
 
     this.update = update;
     this.render = render;
