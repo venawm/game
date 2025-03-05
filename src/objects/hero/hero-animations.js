@@ -26,3 +26,13 @@ export const WALK_DOWN = makeWalkingFrames(0);
 export const WALK_UP = makeWalkingFrames(6);
 export const WALK_RIGHT = makeWalkingFrames(3);
 export const WALK_LEFT = makeWalkingFrames(9);
+
+export const PICK_UP_DOWN = {
+  duration: 400,
+  frames: [
+    {
+      time: 0,
+      frame: 12,
+    },
+  ],
+};

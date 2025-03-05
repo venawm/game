@@ -7,6 +7,7 @@ import { gridCells, isSpaceFree } from "../../helpers/gird";
 import { Animations } from "../../animations";
 import { FrameIndexPattern } from "../../frame-index-pattern";
 import {
+  PICK_UP_DOWN,
   STAND_DOWN,
   STAND_LEFT,
   STAND_RIGHT,
@@ -27,6 +28,8 @@ export class Hero extends GameObject {
     });
     this.facingPosition = DOWN;
     this.destinationPosition = this.position.duplicate();
+    this.itemPickupShell = null;
+    this.itemPickupTime = 0;
     this.body = new Sprite({
       resource: resources.images.hero,
       frameSize: new Vector2(32, 32),
@@ -43,6 +46,7 @@ export class Hero extends GameObject {
         standUp: new FrameIndexPattern(STAND_UP),
         standLeft: new FrameIndexPattern(STAND_LEFT),
         standRight: new FrameIndexPattern(STAND_RIGHT),
+        pickUpDown: new FrameIndexPattern(PICK_UP_DOWN),
       }),
     });
 
@@ -53,9 +57,18 @@ export class Hero extends GameObject {
     });
     this.addChild(shadow);
     this.addChild(this.body);
+    events.on("HERO_PICKKS_UP_ITEM", this, (data) => {
+      this.onPickUpItem(data);
+    });
   }
 
   step(delta, root) {
+    console.log(this.itemPickupTime);
+    if (this.itemPickupTime > 0) {
+      this.workOnItemPickUp(delta);
+      return;
+    }
+
     const distance = moveTowards(this, this.destinationPosition, 1);
     const hasArrived = distance <= 1;
     if (hasArrived) {
@@ -122,5 +135,30 @@ export class Hero extends GameObject {
     }
     //  this.destinationPosition.x = nextX;
     //  this.destinationPosition.y = nextY;
+  }
+
+  onPickUpItem({ image, position }) {
+    this.destinationPosition = position.duplicate();
+    this.itemPickupShell = new GameObject({});
+
+    this.itemPickupShell.addChild(
+      new Sprite({
+        resource: image,
+        position: new Vector2(0, -18),
+      }),
+    );
+    this.addChild(this.itemPickupShell);
+    this.itemPickupTime = 500;
+  }
+
+  workOnItemPickUp(delta) {
+    this.itemPickupTime -= delta;
+
+    this.body.animations.play("pickUpDown");
+
+    if (this.itemPickupTime <= 0) {
+      this.itemPickupShell.destroy();
+      this.itemPickupTime = 0;
+    }
   }
 }

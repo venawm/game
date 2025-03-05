@@ -5,6 +5,8 @@ import { GameObject } from "./src/game-object";
 import { gridCells } from "./src/helpers/gird";
 import { Input } from "./src/input";
 import { Hero } from "./src/objects/hero/hero";
+import { Inventory } from "./src/objects/inventory/inventory";
+import { Rod } from "./src/objects/rod/rod";
 
 import { resources } from "./src/resource";
 import { Sprite } from "./src/sprite";
@@ -34,6 +36,11 @@ mainScene.addChild(groundSprite);
 const hero = new Hero(gridCells(6), gridCells(5));
 mainScene.addChild(hero);
 
+const rod = new Rod(gridCells(7), gridCells(6));
+mainScene.addChild(rod);
+
+const inventory = new Inventory();
+
 const camera = new Camera();
 
 mainScene.addChild(camera);
@@ -56,6 +63,8 @@ const draw = () => {
   mainScene.draw(ctx, 0, 0);
 
   ctx.restore();
+
+  inventory.draw(ctx, 0, 0);
 };
 
 const gameLoop = new GameLoop(update, draw);
